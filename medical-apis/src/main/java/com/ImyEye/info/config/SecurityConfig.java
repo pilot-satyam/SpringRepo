@@ -3,6 +3,7 @@ package com.ImyEye.info.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -27,6 +28,11 @@ import com.ImyEye.info.Security.JwtAuthenticationFilter;
 @EnableMethodSecurity(prePostEnabled = true)
 
 public class SecurityConfig{
+
+    // public static final String[] PUBLIC_URLS={
+    //      "/api/v1/auth/login","api/v1/auth/register","/v3/api-docs"
+    // };
+
     @Autowired
     private CustomUserDetailService customUserDetailService;
     @Autowired
@@ -44,18 +50,28 @@ public SecurityFilterChain SecurityFilterChain(HttpSecurity http) throws Excepti
     .csrf()
     .disable()
     .authorizeHttpRequests()
-    // .requestMatchers("/api/v1/auth/login")
+    .requestMatchers("/api/v1/auth/login")
     // .requestMatchers("/api/v1/auth/**")
+    .permitAll()
+    .requestMatchers("/v3/api-docs")
+    .permitAll()
+    .requestMatchers("/api/v1/auth/register")
+    .permitAll()
+    .requestMatchers(HttpMethod.GET)
+    .permitAll()
+    // .requestMatchers("/v2/api-docs", "/swagger-resources/configuration/ui", "/swagger-resources", "/swagger-resources/configuration/security", "/swagger-ui.html", "/webjars/**")
     // .permitAll()
-    // .requestMatchers("/v3/api-docs")
-    // .permitAll()
-    // .requestMatchers(HttpMethod.GET)
-    // .permitAll()
-    // .anyRequest()
-    // .authenticated()
+    .requestMatchers("/swagger-resources/**")
+    .permitAll()
+    .requestMatchers("/swagger-ui/**")
+    .permitAll()    
+    .requestMatchers("/webjars/**")
+    .permitAll()
+    .anyRequest()
+    .authenticated()
     
-    .requestMatchers("/api/v1/auth/login").authenticated()
-    .anyRequest().permitAll()
+    // .requestMatchers("/api/v1/auth/login").authenticated()
+    // .anyRequest().permitAll()
     .and()
     .exceptionHandling()
     .authenticationEntryPoint(this.jwtAuthenticationEntryPoint)

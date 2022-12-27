@@ -24,7 +24,7 @@ public class Doctor {
 	@GeneratedValue(strategy=GenerationType.AUTO)
      private int DoctorId;	
 
-	@Column(name="user_name",nullable = false,length=100)
+	@Column(nullable = false,length=100)
      private String name;
      private String email;
      private String password;
